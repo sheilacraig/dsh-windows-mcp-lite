@@ -180,3 +180,12 @@ test('the curated-list entry obeys the submission rules', () => {
   // a monorepo entry would carry the subpackage in the name; this is not one
   assert.doesNotMatch(entry.name, /#/)
 })
+
+test('the pull-request body has exactly one substitution point', () => {
+  // A second occurrence makes String.replace() miss the real one, and the
+  // literal placeholder then ships in a public pull request.
+  const body = read('market/PR.body.md')
+  const occurrences = body.split('{{NPM_LINE}}').length - 1
+  assert.equal(occurrences, 1, `the npm placeholder must appear exactly once, found ${occurrences}`)
+  assert.doesNotMatch(body, /\{\{(?!NPM_LINE\})/, 'no other placeholder may ship')
+})
