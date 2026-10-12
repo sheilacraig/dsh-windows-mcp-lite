@@ -24,6 +24,8 @@ These are the design decisions, not a missing-feature list:
 - **No installer that writes to your profile.** `npm run prewarm` installs and verifies the upstream server *in your own terminal*, and never edits a profile patch for you.
 - **No runtime dependency and no build step.** `dependencies` is empty; there is nothing to compile and no `allowBuilds` approval to grant.
 - **No absolute path for your machine.** The bridge invokes `uvx` from `PATH`; a test in this repo fails the build if a machine-specific path appears in a published file.
+- **No `peerDependencies`.** The row *names* `@deepseek-ai/dsh-mcp-client`; it never imports it, and DSH resolves shipped packages from its own installation. This follows DSH's own `templates/mcp` bundle shape, which declares none. A peer range would be a hard activation gate whose SemVer prerelease rules silently reject valid hosts; `engines.dsh` declares the host range for the storefront instead.
+- **No `screenshots.json`.** There is no interface to photograph. Declaring artwork for a configuration file would be decoration, not evidence; the storefront falls back to whatever it can extract.
 
 If you want an in-app dependency installer, a default-off "Computer Use" toggle, or a doctor tool, other plugins in this ecosystem provide those. This one trades them for being small enough to audit in one screen — which matters more than usual for a plugin that hands over your keyboard, mouse and screen.
 

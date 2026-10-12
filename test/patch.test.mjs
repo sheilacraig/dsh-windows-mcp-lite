@@ -139,3 +139,44 @@ test('the repository field points at the repository that is listed', () => {
   assert.match(pkg.repository.url, /github\.com\/sheilacraig\/dsh-windows-mcp-lite/)
   assert.match(pkg.homepage, /github\.com\/sheilacraig\/dsh-windows-mcp-lite/)
 })
+
+/**
+ * The curated list is the only route into the dsh-market storefront, and its
+ * contributing guide checks the submission mechanically before a maintainer
+ * reads the source. These are those rules, enforced here instead of discovered
+ * in a rejected pull request.
+ */
+test('the curated-list entry obeys the submission rules', () => {
+  const entry = yaml.load(read('market/awesome-dsh-plugin.yml'))
+
+  // url must match the repository exactly; name is the link text
+  assert.equal(entry.url, 'https://github.com/sheilacraig/dsh-windows-mcp-lite')
+  assert.equal(entry.name, 'sheilacraig/dsh-windows-mcp-lite')
+
+  // one of the categories the list accepts (tools = Tools & Capabilities)
+  const CATEGORIES = ['agi', 'ui', 'usage', 'theme', 'model', 'identity', 'session', 'memory', 'tools',
+    'wsl', 'browser', 'vision', 'voice', 'docs', 'skill', 'workflow', 'git', 'notify', 'dev',
+    'security', 'remote', 'market', 'fun']
+  assert.ok(CATEGORIES.includes(entry.category), `"${entry.category}" is not an accepted category`)
+
+  // only description.en is required; both must end with a full stop
+  assert.match(entry.description.en, /\.$/)
+  assert.match(entry.description.zh, /。$/)
+
+  // a description containing ": " is parsed as a nested key unless quoted
+  assert.doesNotMatch(entry.description.en, /: /)
+
+  // no superlatives or marketing: the list reads a description as a claim
+  const MARKETING = /\b(smallest|best|fastest|easiest|most powerful|seamless|ultimate|leading|only plugin)\b/i
+  assert.doesNotMatch(entry.description.en, MARKETING)
+  assert.doesNotMatch(entry.description.zh, /最小实现|最强|最好|唯一|颠覆/)
+  assert.doesNotMatch(read('locale/en.json'), /\bsmallest\b/i, 'the plugin card is user-facing text too')
+
+  // every number in the entry must be one this repository can prove
+  if (/\b16\b/.test(entry.description.en)) {
+    assert.ok(read('README.md').includes('**16 tools**'), 'a tool count in the entry needs the matching README claim')
+  }
+
+  // a monorepo entry would carry the subpackage in the name; this is not one
+  assert.doesNotMatch(entry.name, /#/)
+})

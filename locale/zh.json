@@ -1,6 +1,6 @@
 {
   "meta": {
     "title": "Windows-MCP Lite（极简 Windows 控制桥）",
-    "description": "接入 CursorTouch/Windows-MCP 的最小实现：一行可整屏读完的配置，不含插件代码，默认只放行最小权限的工具集。"
+    "description": "接入 CursorTouch/Windows-MCP 的纯配置型桥：一行可整屏读完的配置，不含插件代码，默认只放行最小权限的工具集。"
   }
 }

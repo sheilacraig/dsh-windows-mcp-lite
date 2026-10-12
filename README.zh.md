@@ -24,6 +24,8 @@ DSH agent
 - **没有会改你 profile 的安装器。** `npm run prewarm` 在你自己的终端里装好并验证上游服务器，绝不替你改 profile patch。
 - **没有运行时依赖、没有构建步骤。** `dependencies` 为空，不需要编译，也不需要你授予 `allowBuilds`。
 - **不含针对某台机器的绝对路径。** 桥从 `PATH` 调 `uvx`；仓库里的测试会在任何机器相关路径漏进发布文件时让构建失败。
+- **没有 `peerDependencies`。** 那一行只是**点名** `@deepseek-ai/dsh-mcp-client`，从不 import 它，而 DSH 会从自己的安装里解析随附包。这与 DSH 官方的 `templates/mcp` 组合包形态一致——它同样不声明任何 peer。声明 peer 会变成一道硬性激活门禁，而其 SemVer 预发布规则会静默拒掉合法宿主；宿主范围改由 `engines.dsh` 声明，供市场卡片展示。
+- **没有 `screenshots.json`。** 没有界面可拍。给一个配置文件配上"截屏"是装饰，不是证据；市场会回退到它能抽到的内容。
 
 如果你要的是应用内依赖安装器、默认关闭的 Computer Use 开关、或 doctor 诊断工具，这个生态里别的插件提供了。这个插件用它们换的是"小到一屏能审完"——对一个要把键盘、鼠标和屏幕交出去的插件来说，这一点比平时更值钱。
 
