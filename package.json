@@ -1,0 +1,63 @@
+{
+  "name": "dsh-windows-mcp-lite",
+  "version": "1.0.0",
+  "description": "Config-only DeepSeek Harness bundle that mounts the in-box MCP client bridge against CursorTouch/Windows-MCP; no plugin code, least-privilege tool set by default.",
+  "license": "MIT",
+  "author": {
+    "name": "sheilacraig",
+    "url": "https://github.com/sheilacraig"
+  },
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sheilacraig/dsh-windows-mcp-lite.git"
+  },
+  "homepage": "https://github.com/sheilacraig/dsh-windows-mcp-lite#readme",
+  "bugs": {
+    "url": "https://github.com/sheilacraig/dsh-windows-mcp-lite/issues"
+  },
+  "icon": "./icon.svg",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "mcp",
+    "windows",
+    "windows-mcp",
+    "desktop-automation",
+    "ui-automation",
+    "stdio"
+  ],
+  "engines": {
+    "node": ">=22",
+    "dsh": ">=0.2.0-rc.1 <0.3.0-0"
+  },
+  "exports": {
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "locale/",
+    "icon.svg",
+    "README.md",
+    "README.zh.md",
+    "CHANGELOG.md",
+    "LICENSE",
+    "tools/prewarm.mjs"
+  ],
+  "scripts": {
+    "test": "node --test test/",
+    "prewarm": "node tools/prewarm.mjs",
+    "prepublishOnly": "node --test test/ && node --check tools/prewarm.mjs"
+  },
+  "devDependencies": {
+    "js-yaml": "^4.1.0"
+  },
+  "dsh": {
+    "manifestVersion": 1,
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,38 @@
+# dsh-windows-mcp-lite — the entire integration, in one row.
+#
+# The row below mounts the MCP client bridge that ships inside DeepSeek Harness
+# (`@deepseek-ai/dsh-mcp-client`) and points it at CursorTouch/Windows-MCP over
+# stdio. Nothing else is added: no Host plugin, no web route, no state file.
+#
+# The upstream server's tools reach the model as `mcp__windows__<Tool>`.
+- insert:
+    - id: windows-mcp-lite
+      name: '@deepseek-ai/dsh-mcp-client'
+      config:
+        serverName: windows
+        transport: stdio
+        # `uvx` resolves from the PATH of the process that runs DSH. No absolute
+        # path is written here on purpose: this file is shipped to other people's
+        # machines, and a hardcoded user directory is the usual reason a plugin
+        # works for its author and nowhere else.
+        command: uvx
+        args:
+          # Pinned. An upstream release must not change this bridge's behaviour
+          # under you; bump this deliberately, then re-run `npm run prewarm`.
+          - windows-mcp@0.8.8
+          - serve
+          # Least privilege by default. Harness already owns shell, file,
+          # registry and process access under its own approval policy, so this
+          # bridge does not hand the model a second, unguarded copy of them.
+          - --exclude-tools
+          - PowerShell,Registry,FileSystem,Process,Scrape
+        # The first Snapshot walks a whole accessibility tree; 60 s is tight.
+        toolCallTimeoutMs: 120000
+        # A server that cannot start leaves the rest of the harness working and
+        # logs the reason, instead of failing this row at activation.
+        failOnStartupError: false
+        env:
+          # Upstream reports anonymous telemetry (PostHog) unless told not to.
+          ANONYMIZED_TELEMETRY: 'false'
+          # Upstream outlines every captured region with an orange border.
+          WINDOWS_MCP_DISABLE_FLASH: '1'

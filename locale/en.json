@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Windows-MCP Lite",
+    "description": "The smallest bridge to CursorTouch/Windows-MCP: one audit-ready config row, no plugin code, and a least-privilege tool set by default."
+  }
+}
